@@ -11,23 +11,33 @@ import java.util.Map;
 
 public class PinotSourceConnectorConfig extends AbstractConfig {
 
-  public static final String MY_SETTING_CONFIG = "my.setting";
-  private static final String MY_SETTING_DOC = "This is a setting important to my connector.";
+  public static final String TOPIC_CONFIG = "kafka.topic";
+  private static final String TOPIC_DOC = "Kafka Topic to write to";
 
-  public final String mySetting;
+  public static final String BATCH_SIZE_CONFIG = "batch.size";
+  private static final String BATCH_SIZE_DOC = "Number of data points to retrieve at a time. Defaults to 100 (max value)";
+
+  public final String kafkaTopic;
+  public final String batchSize;
 
   public PinotSourceConnectorConfig(Map<?, ?> originals) {
     super(config(), originals);
-    this.mySetting = this.getString(MY_SETTING_CONFIG);
+    this.kafkaTopic = this.getString(TOPIC_CONFIG);
+    this.batchSize = this.getString(BATCH_SIZE_CONFIG);
   }
 
   public static ConfigDef config() {
     return new ConfigDef()
-        .define(
-            ConfigKeyBuilder.of(MY_SETTING_CONFIG, Type.STRING)
-                .documentation(MY_SETTING_DOC)
-                .importance(Importance.HIGH)
-                .build()
+            .define(
+                ConfigKeyBuilder.of(TOPIC_CONFIG, Type.STRING)
+                        .documentation(TOPIC_DOC)
+                        .importance(Importance.HIGH)
+                        .build())
+            .define(
+                ConfigKeyBuilder.of(BATCH_SIZE_CONFIG, Type.STRING)
+                        .documentation(BATCH_SIZE_DOC)
+                        .importance(Importance.LOW)
+                        .build()
         );
   }
 }
