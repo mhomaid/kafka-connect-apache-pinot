@@ -1,5 +1,6 @@
 package com.yama.kafka.connect;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -19,13 +20,10 @@ import com.github.jcustenborder.kafka.connect.utils.config.Title;
 @Description("This is a description of this connector and will show up in the documentation")
 @DocumentationImportant("This is a important information that will show up in the documentation.")
 @DocumentationTip("This is a tip that will show up in the documentation.")
-@Title("Super Source Connector") //This is the display name that will show up in the documentation.
+@Title("Kafka Connect Apache Pinot Source Connector") //This is the display name that will show up in the documentation.
 @DocumentationNote("This is a note that will show up in the documentation")
 public class PinotSourceConnector extends SourceConnector {
-  /*
-    Your connector should never use System.out for logging. All of your classes should use slf4j
-    for logging
- */
+
   private static Logger log = LoggerFactory.getLogger(PinotSourceConnector.class);
   private PinotSourceConnectorConfig config;
 
@@ -43,15 +41,15 @@ public class PinotSourceConnector extends SourceConnector {
 
   @Override
   public Class<? extends Task> taskClass() {
-    //TODO: Return your task implementation.
     return PinotSourceTask.class;
   }
 
   @Override
   public List<Map<String, String>> taskConfigs(int i) {
-    //TODO: Define the individual task configurations that will be executed.
+    ArrayList<Map<String, String>> configs = new ArrayList<>(1);
+    configs.add(config.originalsStrings());
 
-    throw new UnsupportedOperationException("This has not been implemented.");
+    return configs;
   }
 
   @Override
