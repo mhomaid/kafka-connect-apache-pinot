@@ -6,16 +6,14 @@ import com.github.jcustenborder.kafka.connect.utils.VersionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class PinotSourceTask extends SourceTask {
-  /*
-    Your connector should never use System.out for logging. All of your classes should use slf4j
-    for logging
- */
-  static final Logger log = LoggerFactory.getLogger(PinotSourceTask.class);
 
+  static final Logger log = LoggerFactory.getLogger(PinotSourceTask.class);
+  public PinotSourceConnectorConfig config;
   @Override
   public String version() {
     return VersionUtil.version(this.getClass());
@@ -23,13 +21,30 @@ public class PinotSourceTask extends SourceTask {
 
   @Override
   public void start(Map<String, String> map) {
-    //TODO: Do things here that are required to start your task. This could be open a connection to a database, etc.
+    config = new PinotSourceConnectorConfig(map);
+
   }
 
   @Override
   public List<SourceRecord> poll() throws InterruptedException {
-    //TODO: Create SourceRecord objects that will be sent the kafka cluster.
-    throw new UnsupportedOperationException("This has not been implemented.");
+    // fetch data
+    final ArrayList<SourceRecord> records = new ArrayList<>();
+
+    records.add(generateSourceRecord());
+    return records;
+  }
+
+  private SourceRecord generateSourceRecord() {
+    return new SourceRecord(
+            null,
+            null,
+            config.kafkaTopic,
+            null, // partition will be inferred by the framework
+            null,
+            "Hello",
+            null,
+            "World",
+            null);
   }
 
   @Override
