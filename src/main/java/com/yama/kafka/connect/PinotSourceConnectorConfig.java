@@ -1,20 +1,11 @@
 package com.yama.kafka.connect;
 
+import com.github.jcustenborder.kafka.connect.utils.config.ConfigKeyBuilder;
 import org.apache.kafka.common.config.AbstractConfig;
 import org.apache.kafka.common.config.ConfigDef;
-import org.apache.kafka.common.config.ConfigDef.Type;
 import org.apache.kafka.common.config.ConfigDef.Importance;
-import com.github.jcustenborder.kafka.connect.utils.config.ConfigKeyBuilder;
-
-import org.apache.kafka.common.config.ConfigDef;
-import org.apache.kafka.common.config.ConfigDef.Importance;
-import org.apache.kafka.common.config.ConfigDef.Recommender;
 import org.apache.kafka.common.config.ConfigDef.Type;
-import org.apache.kafka.common.config.ConfigDef.Width;
-import org.apache.kafka.common.config.ConfigException;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 
