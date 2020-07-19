@@ -1,0 +1,180 @@
+{
+  "timestamp": "2020-06-6T00:20.032-0400",
+  "lastName": "Lalonde",
+  "firstName": "Rockhill",
+  "studentID": "3000",
+  "gender": "Male",
+  "subject": "History",
+  "score": "10.1"
+}
+{
+  "timestamp": "2020-06-23T00:20.032-0400",
+  "lastName": "Adicot",
+  "firstName": "Pask",
+  "studentID": "4000",
+  "gender": "Female",
+  "subject": "Maths",
+  "score": "20.0"
+}
+{
+  "timestamp": "2020-06-4T00:20.032-0400",
+  "lastName": "Romagosa",
+  "firstName": "Gokul",
+  "studentID": "9000",
+  "gender": "Female",
+  "subject": "History",
+  "score": "10.1"
+}
+{
+  "timestamp": "2020-06-23T00:20.032-0400",
+  "lastName": "Rockhill",
+  "firstName": "Lalonde",
+  "studentID": "3000",
+  "gender": "Male",
+  "subject": "Maths",
+  "score": "10.1"
+}
+{
+  "timestamp": "2020-06-26T00:20.032-0400",
+  "lastName": "Tom",
+  "firstName": "Nathan",
+  "studentID": "8000",
+  "gender": "Female",
+  "subject": "History",
+  "score": "11.3"
+}
+{
+  "timestamp": "2020-06-6T00:20.032-0400",
+  "lastName": "Srini",
+  "firstName": "Tom",
+  "studentID": "1600",
+  "gender": "Female",
+  "subject": "Maths",
+  "score": "11.3"
+}
+{
+  "timestamp": "2020-06-9T00:20.032-0400",
+  "lastName": "Nathan",
+  "firstName": "Nathan",
+  "studentID": "7000",
+  "gender": "Female",
+  "subject": "Maths",
+  "score": "10.1"
+}
+{
+  "timestamp": "2020-06-13T00:20.032-0400",
+  "lastName": "Rockhill",
+  "firstName": "Rich",
+  "studentID": "8000",
+  "gender": "Female",
+  "subject": "History",
+  "score": "10.1"
+}
+{
+  "timestamp": "2020-06-27T00:20.032-0400",
+  "lastName": "Mohamed",
+  "firstName": "Srini",
+  "studentID": "2000",
+  "gender": "Female",
+  "subject": "History",
+  "score": "20.0"
+}
+{
+  "timestamp": "2020-06-20T00:20.032-0400",
+  "lastName": "Romagosa",
+  "firstName": "Toby",
+  "studentID": "7000",
+  "gender": "Female",
+  "subject": "History",
+  "score": "11.3"
+}
+{
+  "timestamp": "2020-06-3T00:20.032-0400",
+  "lastName": "Tom",
+  "firstName": "Toby",
+  "studentID": "1200",
+  "gender": "Female",
+  "subject": "Maths",
+  "score": "11.3"
+}
+{
+  "timestamp": "2020-06-20T00:20.032-0400",
+  "lastName": "Gokul",
+  "firstName": "Adicot",
+  "studentID": "1600",
+  "gender": "Female",
+  "subject": "History",
+  "score": "10.1"
+}
+{
+  "timestamp": "2020-06-6T00:20.032-0400",
+  "lastName": "Romagosa",
+  "firstName": "Mohamed",
+  "studentID": "5000",
+  "gender": "Male",
+  "subject": "Maths",
+  "score": "20.0"
+}
+{
+  "timestamp": "2020-06-13T00:20.032-0400",
+  "lastName": "Mohamed",
+  "firstName": "Romagosa",
+  "studentID": "1000",
+  "gender": "Female",
+  "subject": "Maths",
+  "score": "10.1"
+}
+{
+  "timestamp": "2020-06-3T00:20.032-0400",
+  "lastName": "Nathan",
+  "firstName": "Romagosa",
+  "studentID": "1400",
+  "gender": "Male",
+  "subject": "History",
+  "score": "11.3"
+}
+{
+  "timestamp": "2020-06-19T00:20.032-0400",
+  "lastName": "Tom",
+  "firstName": "Gokul",
+  "studentID": "1500",
+  "gender": "Male",
+  "subject": "History",
+  "score": "10.1"
+}
+{
+  "timestamp": "2020-06-28T00:20.032-0400",
+  "lastName": "Toby",
+  "firstName": "Romagosa",
+  "studentID": "1100",
+  "gender": "Male",
+  "subject": "History",
+  "score": "11.3"
+}
+{
+  "timestamp": "2020-06-18T00:20.032-0400",
+  "lastName": "Romagosa",
+  "firstName": "Gokul",
+  "studentID": "1500",
+  "gender": "Female",
+  "subject": "History",
+  "score": "10.1"
+}
+{
+  "timestamp": "2020-06-27T00:20.032-0400",
+  "lastName": "Pask",
+  "firstName": "Mohamed",
+  "studentID": "4000",
+  "gender": "Female",
+  "subject": "History",
+  "score": "20.0"
+}
+{
+  "timestamp": "2020-06-15T00:20.032-0400",
+  "lastName": "Lalonde",
+  "firstName": "Romagosa",
+  "studentID": "1000",
+  "gender": "Female",
+  "subject": "Maths",
+  "score": "11.3"
+}
