@@ -15,7 +15,9 @@
         <artifactId>kafka-connect-parent</artifactId>
         <version>2.4.0</version>
     </parent>
-
+    <properties>
+        <pinot.version>0.4.0</pinot.version>
+    </properties>
     <scm>
         <connection></connection>
         <developerConnection></developerConnection>
@@ -25,6 +27,34 @@
         <system></system>
         <url></url>
     </issueManagement>
+    <repositories>
+        <repository>
+            <id>central</id>
+            <name>Maven Repository</name>
+            <layout>default</layout>
+            <url>http://repo1.maven.org/maven2</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.pinot</groupId>
+            <artifactId>pinot-spi</artifactId>
+            <version>${pinot.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.pinot</groupId>
+            <artifactId>pinot-java-client</artifactId>
+            <version>${pinot.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.pinot</groupId>
+            <artifactId>pinot-core</artifactId>
+            <version>${pinot.version}</version>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>
