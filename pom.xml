@@ -3,12 +3,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.yama.kafka.connect</groupId>
-    <artifactId>kafka-connect-apache-pinot-source</artifactId>
+    <artifactId>kafka-connect-apache-pinot</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>kafka-connect-apache-pinot-source</name>
-    <description>A Kafka Connect Connector for kafka-connect-apache-pinot-source</description>
+    <name>kafka-connect-apache-pinot</name>
+    <description>A Kafka Connect Connector Apache Pinot</description>
 
     <parent>
         <groupId>com.github.jcustenborder.kafka.connect</groupId>
@@ -92,13 +92,13 @@
                 </executions>
             </plugin>
             <!--
-Uncomment this second to generate a package to deploy to the Confluent Hub.
+            Will uncomment this once stable to generate a package to deploy to the Confluent Hub.
             <plugin>
                 <groupId>io.confluent</groupId>
                 <artifactId>kafka-connect-maven-plugin</artifactId>
                 <configuration>
                     <confluentControlCenterIntegration>true</confluentControlCenterIntegration>
-                    <documentationUrl>https://jcustenborder.github.io/kafka-connect-documentation/</documentationUrl>
+                    <documentationUrl>https://github.com/mhomaid/kafka-connect-apache-pinot</documentationUrl>
                     <componentTypes>
                         <componentType>source</componentType>
                         <componentType>sink</componentType>
@@ -106,9 +106,9 @@ Uncomment this second to generate a package to deploy to the Confluent Hub.
                         <componentType>converter</componentType>
                     </componentTypes>
                     <tags>
-                        <tag>kafka-connect-apache-pinot-source</tag>
+                        <tag>kafka-connect-apache-pinot</tag>
                     </tags>
-                    <title>Kafka Connect kafka-connect-apache-pinot-source</title>
+                    <title>A Kafka Connect Connector Apache Pinot</title>
                     <supportUrl>${pom.issueManagement.url}</supportUrl>
                     <supportSummary>Support provided through community involvement.</supportSummary>
                     <excludes>
