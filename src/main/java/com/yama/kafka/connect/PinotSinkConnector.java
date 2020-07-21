@@ -23,13 +23,10 @@ import com.github.jcustenborder.kafka.connect.utils.config.Title;
 @Description("This is a description of this connector and will show up in the documentation")
 @DocumentationImportant("This is a important information that will show up in the documentation.")
 @DocumentationTip("This is a tip that will show up in the documentation.")
-@Title("Super Sink Connector") //This is the display name that will show up in the documentation.
+@Title("Kafka Connect Apache Pinot Sink Connector")
 @DocumentationNote("This is a note that will show up in the documentation")
 public class PinotSinkConnector extends SinkConnector {
-  /*
-  Your connector should never use System.out for logging. All of your classes should use slf4j
-  for logging
-   */
+
   private static Logger log = LoggerFactory.getLogger(PinotSinkConnector.class);
   private PinotSinkConnectorConfig config;
 
@@ -59,9 +56,6 @@ public class PinotSinkConnector extends SinkConnector {
      */
 
   }
-
-
-
 
 
   @Override

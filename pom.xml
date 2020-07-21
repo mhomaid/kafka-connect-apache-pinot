@@ -17,6 +17,7 @@
     </parent>
     <properties>
         <pinot.version>0.4.0</pinot.version>
+        <confluent.maven.repo>https://packages.confluent.io/maven/</confluent.maven.repo>
     </properties>
     <scm>
         <connection></connection>
@@ -36,6 +37,11 @@
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
+        </repository>
+        <repository>
+            <id>confluent</id>
+            <name>Confluent</name>
+            <url>${confluent.maven.repo}</url>
         </repository>
     </repositories>
     <dependencies>

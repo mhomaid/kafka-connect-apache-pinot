@@ -20,7 +20,7 @@ import com.github.jcustenborder.kafka.connect.utils.config.Title;
 @Description("This is a description of this connector and will show up in the documentation")
 @DocumentationImportant("This is a important information that will show up in the documentation.")
 @DocumentationTip("This is a tip that will show up in the documentation.")
-@Title("Kafka Connect Apache Pinot Source Connector") //This is the display name that will show up in the documentation.
+@Title("Kafka Connect Apache Pinot Source Connector")
 @DocumentationNote("This is a note that will show up in the documentation")
 public class PinotSourceConnector extends SourceConnector {
 
