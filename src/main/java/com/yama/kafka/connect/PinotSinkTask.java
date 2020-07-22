@@ -27,12 +27,13 @@ public class PinotSinkTask extends SinkTask {
 
   @Override
   public void put(Collection<SinkRecord> records) {
+    log.info("Put method started");
     if (records.isEmpty()) {
       return;
     }
     final SinkRecord first = records.iterator().next();
     final int recordsCount = records.size();
-    log.debug(
+    log.info(
             "Received {} records. First record kafka coordinates:({}-{}-{}). Writing them to the "
                     + "segment store...",
             recordsCount, first.topic(), first.kafkaPartition(), first.kafkaOffset()

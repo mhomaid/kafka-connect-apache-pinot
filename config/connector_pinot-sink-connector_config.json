@@ -1,0 +1,19 @@
+{
+  "name": "pinot-sink-connector",
+  "config": {
+    "connector.class": "com.yama.kafka.connect.PinotSinkConnector",
+    "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "errors.log.enable": "true",
+    "errors.log.include.messages": "true",
+    "topics": "transcript",
+    "pinot.zookeeper.nodes": "localhost:2191",
+    "pinot.cluster.name": "mycluster",
+    "pinot.brokers.nodes": "localhost:2191",
+    "pinot.schema.path": "/Users/mohamed.homaid/Apache/Pinot/schemas",
+    "pinot.table.name": "myTable",
+    "batch.size": "1000",
+    "value.converter.schemas.enable": "false",
+    "key.converter.schemas.enable": "false"
+  }
+}
