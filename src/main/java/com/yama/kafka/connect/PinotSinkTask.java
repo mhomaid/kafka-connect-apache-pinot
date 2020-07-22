@@ -13,22 +13,30 @@ import java.util.Map;
 import com.github.jcustenborder.kafka.connect.utils.VersionUtil;
 
 public class PinotSinkTask extends SinkTask {
-  /*
-    Your connector should never use System.out for logging. All of your classes should use slf4j
-    for logging
- */
   private static Logger log = LoggerFactory.getLogger(PinotSinkTask.class);
 
   PinotSinkConnectorConfig config;
+  String batchSize;
   @Override
-  public void start(Map<String, String> settings) {
-    this.config = new PinotSinkConnectorConfig(settings);
+  public void start(Map<String, String> props) {
+    log.info("Starting Pinot Sink task");
+    this.config = new PinotSinkConnectorConfig(props);
+    batchSize = config.batchSize;
     //TODO: Create api connections here.
   }
 
   @Override
   public void put(Collection<SinkRecord> records) {
-
+    if (records.isEmpty()) {
+      return;
+    }
+    final SinkRecord first = records.iterator().next();
+    final int recordsCount = records.size();
+    log.debug(
+            "Received {} records. First record kafka coordinates:({}-{}-{}). Writing them to the "
+                    + "segment store...",
+            recordsCount, first.topic(), first.kafkaPartition(), first.kafkaOffset()
+    );
   }
 
   @Override
@@ -38,7 +46,7 @@ public class PinotSinkTask extends SinkTask {
 
   @Override
   public void stop() {
-    //Close resources here.
+    log.info("Stopping task");
   }
 
   @Override

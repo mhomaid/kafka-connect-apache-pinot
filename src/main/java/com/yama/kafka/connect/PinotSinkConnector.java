@@ -1,5 +1,6 @@
 package com.yama.kafka.connect;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -30,38 +31,29 @@ public class PinotSinkConnector extends SinkConnector {
 
   private static Logger log = LoggerFactory.getLogger(PinotSinkConnector.class);
   private PinotSinkConnectorConfig config;
+  private Map<String, String> configProps;
 
   @Override
   public List<Map<String, String>> taskConfigs(int maxTasks) {
-    //TODO: Define the individual task configurations that will be executed.
-
-    /**
-     * This is used to schedule the number of tasks that will be running. This should not exceed maxTasks.
-     * Here is a spot where you can dish out work. For example if you are reading from multiple tables
-     * in a database, you can assign a table per task.
-     */
-
-    throw new UnsupportedOperationException("This has not been implemented.");
+    log.info("Setting task configurations for {} workers.", maxTasks);
+    final List<Map<String, String>> configs = new ArrayList<>(maxTasks);
+    for (int i = 0; i < maxTasks; ++i) {
+      configs.add(configProps);
+    }
+    return configs;
   }
 
   @Override
   public void start(Map<String, String> settings) {
     config = new PinotSinkConnectorConfig(settings);
-
-    //TODO: Add things you need to do to setup your connector.
-
-    /**
-     * This will be executed once per connector. This can be used to handle connector level setup. For
-     * example if you are persisting state, you can use this to method to create your state table. You
-     * could also use this to verify permissions
-     */
+    configProps = settings;
 
   }
 
 
   @Override
   public void stop() {
-    //TODO: Do things that are necessary to stop your connector.
+    log.info("Stopping the connector ... ");
   }
 
   @Override
@@ -71,7 +63,6 @@ public class PinotSinkConnector extends SinkConnector {
 
   @Override
   public Class<? extends Task> taskClass() {
-    //TODO: Return your task implementation.
     return PinotSinkTask.class;
   }
 
