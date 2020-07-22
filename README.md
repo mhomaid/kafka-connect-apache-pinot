@@ -1,9 +1,14 @@
-# Introduction
+# Kafka Connect Apache Pinot
 
-Welcome to your new Kafka Connect plugin!
+kafka-connect-apache-pinot is a [Kafka Connector](http://kafka.apache.org/documentation.html#connect)
+for loading data to and from any [Apache Pinot](https://pinot.apache.org/).
 
 # Running in development
+To build a development version you'll need a recent version of Kafka as well as a set of upstream Confluent projects, 
+which you'll have to build from their appropriate snapshot branch. See the [FAQ](https://github.com/mhomaid/kafka-connect-apache-pinot/wiki/FAQ)
+for guidance on this process.
 
+You can build kafka-connect-apache-pinot with Maven using the standard lifecycle phases.
 
 The [docker-compose.yml](docker/kafka/docker-compose.yml) that is included in this repository is based on the Confluent Platform Docker
 images. Take a look at the [quickstart](http://docs.confluent.io/current/cp-docker-images/docs/quickstart.html#getting-started-with-docker-client)
@@ -26,20 +31,19 @@ to determine the ip address.
 docker-compose up -d
 ```
 
-
 The debug script assumes that `connect-standalone` is in the path on your local workstation. Download 
 the latest version of the [Kafka](https://www.confluent.io/download/) to get started.
 
+# FAQ
 
-Start the connector with debugging enabled.
- 
-```
-./bin/debug.sh
-```
+Refer frequently asked questions on Kafka Connect Apache Pinot here -
+https://github.com/mhomaid/kafka-connect-apache-pinot/wiki/FAQ
 
-Start the connector with debugging enabled. This will wait for a debugger to attach.
+# Contribute
 
-```
-export SUSPEND='y'
-./bin/debug.sh
-```
+Contributions can only be accepted if they contain appropriate testing. For example, adding a new dialect of JDBC will require an integration test.
+
+- Source Code: https://github.com/mhomaid/kafka-connect-apache-pinot
+- Issue Tracker: https://github.com/mhomaid/kafka-connect-apache-pinot/issues
+
+# License

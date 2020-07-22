@@ -4,7 +4,7 @@
 
     <groupId>com.yama.kafka.connect</groupId>
     <artifactId>kafka-connect-apache-pinot</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.5.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>kafka-connect-apache-pinot</name>

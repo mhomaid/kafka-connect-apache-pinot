@@ -23,7 +23,7 @@ public class PinotSinkTask extends SinkTask {
   @Override
   public void start(Map<String, String> settings) {
     this.config = new PinotSinkConnectorConfig(settings);
-    //TODO: Create resources like database or api connections here.
+    //TODO: Create api connections here.
   }
 
   @Override

@@ -20,7 +20,8 @@ import com.github.jcustenborder.kafka.connect.utils.config.Title;
  *
  */
 
-@Description("This is a description of this connector and will show up in the documentation")
+@Description("kafka-connect-apache-pinot is a [Kafka Connector](http://kafka.apache.org/documentation.html#connect)\n" +
+        "for loading data to and from any [Apache Pinot](https://pinot.apache.org/).")
 @DocumentationImportant("This is a important information that will show up in the documentation.")
 @DocumentationTip("This is a tip that will show up in the documentation.")
 @Title("Kafka Connect Apache Pinot Sink Connector")
