@@ -61,7 +61,7 @@ public class PinotSinkConnectorConfig extends AbstractConfig {
         int orderInGroup = 0;
         config
                 .define(
-                        ConfigKeyBuilder.of(PINOT_ZOOKEEPER_CONFIG, Type.LIST)
+                        ConfigKeyBuilder.of(PINOT_ZOOKEEPER_CONFIG, Type.STRING)
                                 .documentation(PINOT_ZOOKEEPER_DOC)
                                 .importance(Importance.HIGH)
                                 .orderInGroup(++orderInGroup)
@@ -75,7 +75,7 @@ public class PinotSinkConnectorConfig extends AbstractConfig {
                                 .group(CONNECTOR_CLUSTER_CONFIGS)
                                 .build())
                 .define(
-                        ConfigKeyBuilder.of(PINOT_BROKERS_CONFIG, Type.LIST)
+                        ConfigKeyBuilder.of(PINOT_BROKERS_CONFIG, Type.STRING)
                                 .documentation(PINOT_BROKERS_CONFIG_DOC)
                                 .importance(Importance.HIGH)
                                 .orderInGroup(++orderInGroup)

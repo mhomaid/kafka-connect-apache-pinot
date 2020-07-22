@@ -31,13 +31,19 @@ public class PinotSinkTask extends SinkTask {
     if (records.isEmpty()) {
       return;
     }
-    final SinkRecord first = records.iterator().next();
-    final int recordsCount = records.size();
-    log.info(
-            "Received {} records. First record kafka coordinates:({}-{}-{}). Writing them to the "
-                    + "segment store...",
-            recordsCount, first.topic(), first.kafkaPartition(), first.kafkaOffset()
-    );
+    for (SinkRecord record : records) {
+      log.info("record {} .. ", record);
+      String topic = record.topic();
+      int partition = record.kafkaPartition();
+      TopicPartition tp = new TopicPartition(topic, partition);
+    }
+    log.info("Read {} records from Kafka", records.size());
+
+    try{
+      //TODO : Create a writer and segment and push the records to it
+    }catch (Exception e){
+
+    }
   }
 
   @Override
