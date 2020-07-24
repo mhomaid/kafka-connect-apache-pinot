@@ -57,6 +57,7 @@ $ cd incubator-pinot
 $ mvn clean install -DskipTests -Pbin-dist
 
 # Run the Quick Demo
+```
 $ cd pinot-distribution/target/apache-pinot-incubating-<version>-SNAPSHOT-bin
 $ bin/quick-start-batch.sh
 ```
