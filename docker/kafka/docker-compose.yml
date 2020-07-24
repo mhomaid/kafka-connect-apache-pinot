@@ -178,3 +178,32 @@ services:
       KAFKA_REST_BOOTSTRAP_SERVERS: 'broker:29092'
       KAFKA_REST_LISTENERS: "http://0.0.0.0:8082"
       KAFKA_REST_SCHEMA_REGISTRY_URL: 'http://schema-registry:8081'
+  pinot-controller:
+    image: apachepinot/pinot:0.4.0
+    hostname: pinot-controller
+    volumes:
+      - ./pinot-docker-demo/pinot/controller:/tmp/data/controller
+    ports:
+      - "9000:9000"
+    depends_on:
+      - kafka
+  pinot-broker:
+    image: apachepinot/pinot:0.4.0
+    hostname: pinot-broker
+    ports:
+      - "8099:8099"
+    depends_on:
+      - zookeeper
+      - kafka
+      - pinot-controller
+  pinot-server:
+    image: apachepinot/pinot:0.4.0
+    hostname: pinot-server
+    volumes:
+      - ./pinot-docker-demo/pinot/server:/tmp/data/server
+    ports:
+      - "8098:8098"
+    depends_on:
+      - zookeeper
+      - kafka
+      - pinot-controller

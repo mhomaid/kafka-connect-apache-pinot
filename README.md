@@ -10,6 +10,10 @@ for guidance on this process.
 
 You can build kafka-connect-apache-pinot with Maven using the standard lifecycle phases.
 
+```
+mvn clean package
+cp -R target/kafka-connect-target/usr/share/kafka-connect  TO_CONNECT_HOME_DIR
+
 The [docker-compose.yml](docker/kafka/docker-compose.yml) that is included in this repository is based on the Confluent Platform Docker
 images. Take a look at the [quickstart](http://docs.confluent.io/current/cp-docker-images/docs/quickstart.html#getting-started-with-docker-client)
 for the Docker images. 
@@ -24,6 +28,17 @@ to determine the ip address.
 127.0.0.1 zookeeper
 127.0.0.1 kafka
 127.0.0.1 schema-registry
+127.0.0.1 connect
+127.0.0.1 control-center
+127.0.0.1 ksqldb-server
+127.0.0.1 ksqldb-cli
+127.0.0.1 ksql-datagen
+127.0.0.1 rest-proxy
+
+127.0.0.1 pinot-controller
+127.0.0.1 pinot-broker
+127.0.0.1 pinot-server
+
 ```
 
 
@@ -31,8 +46,20 @@ to determine the ip address.
 docker-compose up -d
 ```
 
-The debug script assumes that `connect-standalone` is in the path on your local workstation. Download 
-the latest version of the [Kafka](https://www.confluent.io/download/) to get started.
+## Instructions to build Pinot
+More detailed instructions can be found at [Quick Demo](https://docs.pinot.apache.org/getting-started) section in the documentation.
+```
+# Clone a repo
+$ git clone https://github.com/apache/incubator-pinot.git
+$ cd incubator-pinot
+
+# Build Pinot
+$ mvn clean install -DskipTests -Pbin-dist
+
+# Run the Quick Demo
+$ cd pinot-distribution/target/apache-pinot-incubating-<version>-SNAPSHOT-bin
+$ bin/quick-start-batch.sh
+```
 
 # FAQ
 
