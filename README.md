@@ -13,7 +13,7 @@ You can build kafka-connect-apache-pinot with Maven using the standard lifecycle
 ```
 mvn clean package
 cp -R target/kafka-connect-target/usr/share/kafka-connect  TO_CONNECT_HOME_DIR
-
+```
 The [docker-compose.yml](docker/kafka/docker-compose.yml) that is included in this repository is based on the Confluent Platform Docker
 images. Take a look at the [quickstart](http://docs.confluent.io/current/cp-docker-images/docs/quickstart.html#getting-started-with-docker-client)
 for the Docker images. 
@@ -39,13 +39,9 @@ to determine the ip address.
 127.0.0.1 pinot-broker
 127.0.0.1 pinot-server
 
-```
 
-
-```
 docker-compose up -d
 ```
-
 ## Instructions to build Pinot
 More detailed instructions can be found at [Quick Demo](https://docs.pinot.apache.org/getting-started) section in the documentation.
 ```
@@ -57,10 +53,10 @@ $ cd incubator-pinot
 $ mvn clean install -DskipTests -Pbin-dist
 
 # Run the Quick Demo
-```
 $ cd pinot-distribution/target/apache-pinot-incubating-<version>-SNAPSHOT-bin
 $ bin/quick-start-batch.sh
 ```
+
 
 # FAQ
 
