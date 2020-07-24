@@ -48,8 +48,8 @@ public class PinotSinkConnector extends SinkConnector {
   public void start(Map<String, String> properties) {
     log.info("{} Starting connector...", this);
     try {
-      config = new PinotSinkConnectorConfig(properties);
       configProps = properties;
+      config = new PinotSinkConnectorConfig(configProps);
     } catch (ConfigException ce) {
       throw new ConnectException("Couldn't start PinotSinkConnector due to configuration error.", ce);
     } catch (Exception ce) {

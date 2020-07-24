@@ -17,6 +17,7 @@
     </parent>
     <properties>
         <pinot.version>0.4.0</pinot.version>
+        <jackson.version>2.9.8</jackson.version>
         <confluent.maven.repo>https://packages.confluent.io/maven/</confluent.maven.repo>
     </properties>
     <scm>
@@ -60,6 +61,33 @@
             <artifactId>pinot-core</artifactId>
             <version>${pinot.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.pinot</groupId>
+            <artifactId>pinot-batch-ingestion-common</artifactId>
+            <version>0.4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.pinot</groupId>
+            <artifactId>pinot-stream-ingestion</artifactId>
+            <version>0.4.0</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.pinot</groupId>
+            <artifactId>pinot-json</artifactId>
+            <version>0.4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>

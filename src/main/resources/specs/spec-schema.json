@@ -1,0 +1,88 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "javaType": "com.yama.kafka.connect.pinot.model.JobSpec",
+  "properties": {
+    "jobType": {
+      "type": "string"
+    },
+    "inputDirURI": {
+      "type": "string"
+    },
+    "includeFileNamePattern": {
+      "type": "string"
+    },
+    "outputDirURI": {
+      "type": "string"
+    },
+    "overwriteOutput": {
+      "type": "boolean"
+    },
+    "pinotFSSpecs": {
+      "type": "array",
+      "items": [
+        {
+          "type": "object",
+          "properties": {
+            "scheme": {
+              "type": "string"
+            },
+            "className": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "scheme",
+            "className"
+          ]
+        }
+      ]
+    },
+    "recordReaderSpec": {
+      "type": "object",
+      "properties": {
+        "dataFormat": {
+          "type": "string"
+        },
+        "className": {
+          "type": "string"
+        },
+        "configClassName": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "dataFormat",
+        "className",
+        "configClassName"
+      ]
+    },
+    "tableSpec": {
+      "type": "object",
+      "properties": {
+        "tableName": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "tableName"
+      ]
+    },
+    "pinotClusterSpecs": {
+      "type": "array",
+      "items": [
+        {
+          "type": "object",
+          "properties": {
+            "controllerURI": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "controllerURI"
+          ]
+        }
+      ]
+    }
+  }
+}

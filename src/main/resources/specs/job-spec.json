@@ -1,0 +1,26 @@
+{
+  "jobType": "SegmentCreationAndTarPush",
+  "inputDirURI": "/Users/mohamed.homaid/Apache/Pinot/pinot-tutorial/transcript/rawdata/",
+  "includeFileNamePattern": "glob:**/*.json",
+  "outputDirURI": "/Users/mohamed.homaid/Apache/Pinot/pinot-tutorial/transcript/segments/",
+  "overwriteOutput": true,
+  "pinotFSSpecs": [
+    {
+      "scheme": "file",
+      "className": "org.apache.pinot.spi.filesystem.LocalPinotFS"
+    }
+  ],
+  "recordReaderSpec": {
+    "dataFormat": "json",
+    "className": "org.apache.pinot.plugin.inputformat.json.JsonRecordReader",
+    "configClassName": "org.apache.pinot.plugin.inputformat.json.JSONRecordReaderConfig"
+  },
+  "tableSpec": {
+    "tableName": "transcript"
+  },
+  "pinotClusterSpecs": [
+    {
+      "controllerURI": "http://localhost:9001"
+    }
+  ]
+}

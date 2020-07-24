@@ -1,5 +1,7 @@
 package com.yama.kafka.connect;
 
+import com.github.jcustenborder.kafka.connect.utils.VersionUtil;
+import com.yama.kafka.connect.pinot.batch.PinotSegmentWriter;
 import org.apache.kafka.clients.consumer.OffsetAndMetadata;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.connect.sink.SinkRecord;
@@ -10,19 +12,25 @@ import org.slf4j.LoggerFactory;
 import java.util.Collection;
 import java.util.Map;
 
-import com.github.jcustenborder.kafka.connect.utils.VersionUtil;
 
 public class PinotSinkTask extends SinkTask {
   private static Logger log = LoggerFactory.getLogger(PinotSinkTask.class);
 
   PinotSinkConnectorConfig config;
+  PinotSegmentWriter writer;
   String batchSize;
+
   @Override
   public void start(Map<String, String> props) {
     log.info("Starting Pinot Sink task");
-    this.config = new PinotSinkConnectorConfig(props);
-    batchSize = config.batchSize;
-    //TODO: Create api connections here.
+    config = new PinotSinkConnectorConfig(props);
+    // Create api connections here.
+    writer.init(config);
+
+  }
+
+  void initWriter() {
+    config.getString(PinotSinkConnectorConfig.PINOT_INPUT_DIR_URI_CONFIG);
   }
 
   @Override

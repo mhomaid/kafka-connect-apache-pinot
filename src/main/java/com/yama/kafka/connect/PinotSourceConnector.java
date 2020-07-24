@@ -1,21 +1,16 @@
 package com.yama.kafka.connect;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
+import com.github.jcustenborder.kafka.connect.utils.VersionUtil;
+import com.github.jcustenborder.kafka.connect.utils.config.*;
 import org.apache.kafka.common.config.ConfigDef;
 import org.apache.kafka.connect.connector.Task;
 import org.apache.kafka.connect.source.SourceConnector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.jcustenborder.kafka.connect.utils.VersionUtil;
-import com.github.jcustenborder.kafka.connect.utils.config.Description;
-import com.github.jcustenborder.kafka.connect.utils.config.DocumentationImportant;
-import com.github.jcustenborder.kafka.connect.utils.config.DocumentationNote;
-import com.github.jcustenborder.kafka.connect.utils.config.DocumentationTip;
-import com.github.jcustenborder.kafka.connect.utils.config.Title;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Description("This is a description of this connector and will show up in the documentation")
 @DocumentationImportant("This is a important information that will show up in the documentation.")
@@ -35,8 +30,6 @@ public class PinotSourceConnector extends SourceConnector {
   @Override
   public void start(Map<String, String> map) {
     config = new PinotSourceConnectorConfig(map);
-
-    //TODO: Add things you need to do to setup your connector.
   }
 
   @Override
