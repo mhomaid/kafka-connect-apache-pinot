@@ -15,7 +15,8 @@
     "batch.size": "1000",
     "tableSpec.tableName": "table",
     "pinotClusterSpecs.controllerURI": "localhost:9000",
-    "value.converter.schemas.enable": "false",
-    "key.converter.schemas.enable": "false"
+    "key.converter.schemas.enable": "false",
+    "value.converter.schema.registry.url": "http://localhost:8081/",
+    "value.converter.schemas.enable": "true"
   }
 }

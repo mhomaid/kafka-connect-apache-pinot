@@ -13,9 +13,10 @@
     "pinot.schema.path": "/Users/mohamed.homaid/Apache/Pinot/schemas",
     "pinot.table.name": "myTable",
     "batch.size": "1000",
+    "input.dir.uri": "/Users/mohamed.homaid/Apache/Pinot/demo-pinot",
     "tableSpec.tableName": "table",
     "pinotClusterSpecs.controllerURI": "localhost:9000",
-    "value.converter.schemas.enable": "false",
-    "key.converter.schemas.enable": "false"
+    "key.converter.schemas.enable": "false",
+    "value.converter.schemas.enable": "false"
   }
 }

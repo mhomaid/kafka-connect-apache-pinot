@@ -1,0 +1,15 @@
+{
+  "name": "test1",
+  "config": {
+    "connector.class": "com.yama.kafka.connect.PinotSinkConnector",
+    "topics": "Risk_Scores",
+    "pinot.zookeeper.nodes": "localhost:2181",
+    "pinot.cluster.name": "demo",
+    "pinot.brokers.nodes": "localhost:9000",
+    "pinot.schema.path": "/Users/mohamed.homaid/Apache/Pinot/demo-pinot",
+    "pinot.table.name": "Demo",
+    "batch.size": "10000",
+    "tableSpec.tableName": "tablehere",
+    "pinotClusterSpecs.controllerURI": "localhost:9000"
+  }
+}
