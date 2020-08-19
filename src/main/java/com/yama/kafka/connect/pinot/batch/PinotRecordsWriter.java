@@ -21,7 +21,7 @@ import java.util.Date;
 
 public class PinotRecordsWriter {
     private static final Logger LOGGER = LoggerFactory.getLogger(PinotRecordsWriter.class);
-    private static final ObjectMapper JSON_SERDE = new ObjectMapper();
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     public static final String FILE_NAME_PATTERN = "yyyyMMddHHmmss";
     int batchSize = 100;
     int recordsSize = 0;
@@ -35,18 +35,26 @@ public class PinotRecordsWriter {
 
     public void initWriter(PinotSinkConnectorConfig config) {
         String topic = "transcript";
-        Path segmentsPath = Paths.get(config.getString(PinotSinkConnectorConfig.PINOT_INPUT_DIR_URI_CONFIG) + topic);
+//        Path segmentsPath = Paths.get(config.getString(PinotSinkConnectorConfig.PINOT_INPUT_DIR_URI_CONFIG) + "/" + topic);
+        String segmentsPath = config.getString(PinotSinkConnectorConfig.PINOT_INPUT_DIR_URI_CONFIG) + "_" + topic;
         String time = new SimpleDateFormat(FILE_NAME_PATTERN).format(new Date());
-        String filename = time + ".json";
+        String filename = ".json";
+        try {
+            _outputStream = new PrintStream(
+                    Files.newOutputStream(Paths.get(segmentsPath + "_" + filename), StandardOpenOption.CREATE, StandardOpenOption.APPEND),
+                    false,
+                    StandardCharsets.UTF_8.name());
+        } catch (IOException e) {
+            throw new ConnectException("Couldn't find or create file '" + filename + "' for PinotSinkSinkTask", e);
+        }
+    }
+
+    private void createRecordsDir(Path segmentsPath) {
         if (!Files.exists(segmentsPath)) {
             try {
                 Files.createDirectory(segmentsPath);
-                _outputStream = new PrintStream(
-                        Files.newOutputStream(Paths.get(segmentsPath + filename), StandardOpenOption.CREATE, StandardOpenOption.APPEND),
-                        false,
-                        StandardCharsets.UTF_8.name());
             } catch (IOException e) {
-                throw new ConnectException("Couldn't find or create file '" + filename + "' for PinotSinkSinkTask", e);
+                LOGGER.info("Couldn't find or create Director in {} ", segmentsPath);
             }
         }
     }
@@ -68,11 +76,9 @@ public class PinotRecordsWriter {
                     sinkRecord.kafkaPartition(),
                     sinkRecord.kafkaOffset()
             );
-
             tryWriteRecord(sinkRecord);
         }
     }
-
     private void tryWriteRecord(SinkRecord sinkRecord) {
         String record = null;
         try {
@@ -101,7 +107,7 @@ public class PinotRecordsWriter {
     private String convertRecordToJson(SinkRecord sinkRecord) {
         String dataJson;
         try {
-            dataJson = JSON_SERDE.writeValueAsString(sinkRecord.value());
+            dataJson = OBJECT_MAPPER.writeValueAsString(sinkRecord.value());
         } catch (JsonProcessingException e) {
             dataJson = "Bad data can't be written as json: " + e.getMessage();
         }
@@ -111,10 +117,9 @@ public class PinotRecordsWriter {
     private boolean ignoreRecord(SinkRecord record) {
         return record.value() == null;
     }
-
     public void flush() {
 //        bulkProcessor.flush(flushTimeoutMs);
-        _outputStream.flush();
+//        _outputStream.flush();
     }
 
     public void start() {
@@ -126,4 +131,5 @@ public class PinotRecordsWriter {
         if (_outputStream != null && _outputStream != System.out)
             _outputStream.close();
     }
+
 }
