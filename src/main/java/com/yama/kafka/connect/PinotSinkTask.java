@@ -1,6 +1,7 @@
 package com.yama.kafka.connect;
 
 import com.github.jcustenborder.kafka.connect.utils.VersionUtil;
+import com.yama.kafka.connect.pinot.batch.PinotConnectorSegmentCreator;
 import com.yama.kafka.connect.pinot.batch.PinotRecordsWriter;
 import org.apache.kafka.clients.consumer.OffsetAndMetadata;
 import org.apache.kafka.common.TopicPartition;
@@ -14,11 +15,12 @@ import java.util.Collection;
 import java.util.Map;
 
 public class PinotSinkTask extends SinkTask {
-    private static Logger LOGGER = LoggerFactory.getLogger(PinotSinkTask.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PinotSinkTask.class);
 
     PinotSinkConnectorConfig config;
     PinotRecordsWriter writer;
     PrintStream outputStream;
+    PinotConnectorSegmentCreator segmentCreator;
 
     @Override
     public void start(Map<String, String> props) {
@@ -29,15 +31,12 @@ public class PinotSinkTask extends SinkTask {
     }
 
     public void initWriter(PinotSinkConnectorConfig config) {
-        LOGGER.info(" initWriter called");
-
-        writer = new PinotRecordsWriter(outputStream);
+        writer = new PinotRecordsWriter(outputStream, segmentCreator);
         writer.initWriter(config);
     }
 
     @Override
     public void put(Collection<SinkRecord> records) {
-        LOGGER.info("Put method started");
         if (records.isEmpty()) {
             return;
         }

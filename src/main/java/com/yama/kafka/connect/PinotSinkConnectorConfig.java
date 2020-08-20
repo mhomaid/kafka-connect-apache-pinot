@@ -23,6 +23,9 @@ public class PinotSinkConnectorConfig extends AbstractConfig {
     public static final String PINOT_SCHEMA_PATH_CONFIG = "pinot.schema.path";
     private static final String PINOT_SCHEMA_PATH_CONFIG_DOC = "Pinot Schema Path";
 
+    public static final String PINOT_SCHEMA_NAME_CONFIG = "pinot.schema.name";
+    private static final String PINOT_SCHEMA_NAME_CONFIG_DOC = "Pinot Schema Name";
+
     public static final String PINOT_TABLE_NAME_CONFIG = "pinot.table.name";
     private static final String PINOT_TABLE_NAME_CONFIG_DOC = "Pinot Table Name";
 
@@ -83,7 +86,7 @@ public class PinotSinkConnectorConfig extends AbstractConfig {
     public static final String CONNECTOR_CLUSTER_GROUP = "Pinot Cluster Configs";
     public static final String CONNECTOR_SCHEMA_GROUP = "Pinot Schema Configs";
     public static final String CONNECTOR_BATCH_SPEC_GROUP = "Pinot Batch Spec Configs";
-    public static final String CONNECTOR_STREAM_GROUP = "Pinot Batch Spec Configs";
+    public static final String CONNECTOR_STREAM_GROUP = "Pinot Stream Spec Configs";
 
 
     public final String batchSize;
@@ -104,7 +107,7 @@ public class PinotSinkConnectorConfig extends AbstractConfig {
         this.pinotSchemaPath = this.getString(PINOT_SCHEMA_PATH_CONFIG);
         this.pinotTableName = this.getString(PINOT_TABLE_NAME_CONFIG);
         this.outputDirURI = this.getString(OUTPUT_DIR_URI_CONFIG);
-        this.schemaName = this.getString(PINOT_SCHEMA_PATH_CONFIG);
+        this.schemaName = this.getString(PINOT_SCHEMA_NAME_CONFIG);
     }
 
     public static ConfigDef config() {
@@ -143,62 +146,9 @@ public class PinotSinkConnectorConfig extends AbstractConfig {
         ;
     }
 
-    private static void addPinotStreamOptions(ConfigDef config) {
-        int orderInGroup = 0;
-        config
-                .define(
-                        ConfigKeyBuilder.of(STREAM_FETCH_TIMEOUT_MILLIS, Type.LONG)
-                                .documentation("")
-                                .importance(Importance.HIGH)
-                                .orderInGroup(++orderInGroup)
-                                .group(CONNECTOR_STREAM_GROUP)
-                                .defaultValue(30_000)
-                                .build())
-                .define(
-                        ConfigKeyBuilder.of(SEGMENT_FLUSH_THRESHOLD_TIME, Type.LONG)
-                                .documentation("")
-                                .importance(Importance.HIGH)
-                                .orderInGroup(++orderInGroup)
-                                .group(CONNECTOR_STREAM_GROUP)
-                                .defaultValue(5_000)
-                                .build())
-                .define(
-                        ConfigKeyBuilder.of(SEGMENT_FLUSH_THRESHOLD_ROWS, Type.LONG)
-                                .documentation("")
-                                .importance(Importance.HIGH)
-                                .orderInGroup(++orderInGroup)
-                                .group(CONNECTOR_STREAM_GROUP)
-                                .defaultValue(100_000)
-                                .build())
-                .define(
-                        ConfigKeyBuilder.of(SEGMENT_FLUSH_DESIRED_SIZE, Type.LONG)
-                                .documentation("")
-                                .importance(Importance.HIGH)
-                                .orderInGroup(++orderInGroup)
-                                .group(CONNECTOR_STREAM_GROUP)
-                                .defaultValue(100_000)
-                                .build())
-                .define(
-                        ConfigKeyBuilder.of(SEGMENT_FLUSH_AUTO_TUNE_INITIAL_ROWS, Type.LONG)
-                                .documentation("")
-                                .importance(Importance.HIGH)
-                                .orderInGroup(++orderInGroup)
-                                .group(CONNECTOR_STREAM_GROUP)
-                                .defaultValue(100_000)
-                                .build())
-                .define(
-                        ConfigKeyBuilder.of(SEGMENT_COMMIT_TIMEOUT_SECONDS, Type.LONG)
-                                .documentation("")
-                                .importance(Importance.HIGH)
-                                .orderInGroup(++orderInGroup)
-                                .group(CONNECTOR_STREAM_GROUP)
-                                .defaultValue(100_000)
-                                .build())
-        ;
-    }
 
     private static void addPinotBatchJobOptions(ConfigDef config) {
-        int orderInGroup = 0;
+        int orderInGroup = 1;
         config
                 .define(
                         ConfigKeyBuilder.of(PINOT_JOB_TYPE_CONFIG, Type.STRING)
@@ -299,11 +249,18 @@ public class PinotSinkConnectorConfig extends AbstractConfig {
     }
 
     private static void addPinotSchemaOptions(ConfigDef config) {
-        int orderInGroup = 0;
+        int orderInGroup = 2;
         config
                 .define(
                         ConfigKeyBuilder.of(PINOT_SCHEMA_PATH_CONFIG, Type.STRING)
                                 .documentation(PINOT_SCHEMA_PATH_CONFIG_DOC)
+                                .importance(Importance.HIGH)
+                                .orderInGroup(++orderInGroup)
+                                .group(CONNECTOR_SCHEMA_GROUP)
+                                .build())
+                .define(
+                        ConfigKeyBuilder.of(PINOT_SCHEMA_NAME_CONFIG, Type.STRING)
+                                .documentation(PINOT_SCHEMA_NAME_CONFIG_DOC)
                                 .importance(Importance.HIGH)
                                 .orderInGroup(++orderInGroup)
                                 .group(CONNECTOR_SCHEMA_GROUP)
@@ -324,5 +281,60 @@ public class PinotSinkConnectorConfig extends AbstractConfig {
                                 .build()
                 );
     }
+
+    private static void addPinotStreamOptions(ConfigDef config) {
+        int orderInGroup = 3;
+        config
+                .define(
+                        ConfigKeyBuilder.of(STREAM_FETCH_TIMEOUT_MILLIS, Type.LONG)
+                                .documentation("")
+                                .importance(Importance.HIGH)
+                                .orderInGroup(++orderInGroup)
+                                .group(CONNECTOR_STREAM_GROUP)
+                                .defaultValue(30_000)
+                                .build())
+                .define(
+                        ConfigKeyBuilder.of(SEGMENT_FLUSH_THRESHOLD_TIME, Type.LONG)
+                                .documentation("")
+                                .importance(Importance.HIGH)
+                                .orderInGroup(++orderInGroup)
+                                .group(CONNECTOR_STREAM_GROUP)
+                                .defaultValue(5_000)
+                                .build())
+                .define(
+                        ConfigKeyBuilder.of(SEGMENT_FLUSH_THRESHOLD_ROWS, Type.LONG)
+                                .documentation("")
+                                .importance(Importance.HIGH)
+                                .orderInGroup(++orderInGroup)
+                                .group(CONNECTOR_STREAM_GROUP)
+                                .defaultValue(100_000)
+                                .build())
+                .define(
+                        ConfigKeyBuilder.of(SEGMENT_FLUSH_DESIRED_SIZE, Type.LONG)
+                                .documentation("")
+                                .importance(Importance.HIGH)
+                                .orderInGroup(++orderInGroup)
+                                .group(CONNECTOR_STREAM_GROUP)
+                                .defaultValue(100_000)
+                                .build())
+                .define(
+                        ConfigKeyBuilder.of(SEGMENT_FLUSH_AUTO_TUNE_INITIAL_ROWS, Type.LONG)
+                                .documentation("")
+                                .importance(Importance.HIGH)
+                                .orderInGroup(++orderInGroup)
+                                .group(CONNECTOR_STREAM_GROUP)
+                                .defaultValue(100_000)
+                                .build())
+                .define(
+                        ConfigKeyBuilder.of(SEGMENT_COMMIT_TIMEOUT_SECONDS, Type.LONG)
+                                .documentation("")
+                                .importance(Importance.HIGH)
+                                .orderInGroup(++orderInGroup)
+                                .group(CONNECTOR_STREAM_GROUP)
+                                .defaultValue(100_000)
+                                .build())
+        ;
+    }
+
 
 }

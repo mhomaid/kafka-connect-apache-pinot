@@ -2,116 +2,107 @@ package com.yama.kafka.connect.pinot.batch;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.yama.kafka.connect.PinotSinkConnectorConfig;
 import org.apache.pinot.common.utils.TarGzCompressionUtils;
 import org.apache.pinot.core.data.readers.GenericRowRecordReader;
 import org.apache.pinot.core.indexsegment.IndexSegment;
 import org.apache.pinot.core.indexsegment.generator.SegmentGeneratorConfig;
 import org.apache.pinot.core.segment.creator.impl.SegmentIndexCreationDriverImpl;
-import org.apache.pinot.spi.config.table.TableConfig;
 import org.apache.pinot.spi.config.table.TableType;
-import org.apache.pinot.spi.data.DimensionFieldSpec;
-import org.apache.pinot.spi.data.FieldSpec;
-import org.apache.pinot.spi.data.MetricFieldSpec;
 import org.apache.pinot.spi.data.Schema;
 import org.apache.pinot.spi.data.readers.GenericRow;
 import org.apache.pinot.spi.utils.builder.TableConfigBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 
 public class PinotConnectorSegmentCreator {
     private static Logger LOGGER = LoggerFactory.getLogger(PinotConnectorSegmentCreator.class);
-    public static final String STUDENT_ID = "studentID";
-    public static final String FIRST_NAME = "firstName";
-    public static final String LAST_NAME = "lastName";
-    public static final String GENDER = "gender";
-    public static final String SUBJECT = "subject";
-    public static final String SCORE = "score";
 
-    private static final String SEGMENT_FILES_PATH = "/Users/mohamed.homaid/Apache/Pinot/demo-pinot/segments/1";
-    private static final File INDEX_DIR = new File(SEGMENT_FILES_PATH);
-    private static final String SEGMENT_NAME = "Transcript_Segment";
-    private static final String TABLE_NAME = "transcript";
+    public static final String JSON = ".json";
     private static final double MAX_VALUE = Integer.MAX_VALUE;
     private static final int NUM_ROWS = 1000;
     public static IndexSegment _indexSegment;
     private List<IndexSegment> _indexSegments;
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    PinotSinkConnectorConfig _config;
 
-    public static void main(String[] args) {
-        try {
-            buildSegment();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
-    protected static void buildSegment()
+    public void generateSegment(PinotSinkConnectorConfig config)
             throws Exception {
+        LOGGER.info("generateSegment ");
+        String TABLE_NAME = config.getString(PinotSinkConnectorConfig.PINOT_TABLE_NAME_CONFIG);
+        String SEGMENT_NAME = config.getString(PinotSinkConnectorConfig.PINOT_TABLE_NAME_CONFIG);
+        String RECORDS_FILES_PATH = config.getString(PinotSinkConnectorConfig.PINOT_INPUT_DIR_URI_CONFIG);
+        String SEGMENT_FILES_PATH = config.getString(PinotSinkConnectorConfig.OUTPUT_DIR_URI_CONFIG);
+        File INDEX_DIR = new File(SEGMENT_FILES_PATH);
 
-        Schema schema = buildSchema();
-        TableConfig tableConfig = new TableConfigBuilder(TableType.OFFLINE).setTableName(TABLE_NAME).build();
-        JsonNode jsonNode;
-        SegmentGeneratorConfig config = new SegmentGeneratorConfig(tableConfig, schema);
-        config.setSegmentName(SEGMENT_NAME);
-        config.setOutDir(INDEX_DIR.getAbsolutePath());
-        config.setTableName(TABLE_NAME);
-        String file = SEGMENT_FILES_PATH + TABLE_NAME;
+        SegmentGeneratorConfig segmentGeneratorConfig = new SegmentGeneratorConfig(
+                new TableConfigBuilder(TableType.OFFLINE).setTableName(TABLE_NAME).build(),
+                buildSchemaFromFile());
 
+        segmentGeneratorConfig.setSegmentName(SEGMENT_NAME);
+        segmentGeneratorConfig.setOutDir(INDEX_DIR.getAbsolutePath());
+        segmentGeneratorConfig.setTableName(TABLE_NAME);
+        String file = RECORDS_FILES_PATH + TABLE_NAME + JSON;
 
         List<GenericRow> segmentRecords = new ArrayList<>();
         GenericRow segmentRecord = new GenericRow();
-        String json;
+        JsonNode jsonNode;
         try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8))) {
+            String json;
             while ((json = br.readLine()) != null) {
                 jsonNode = OBJECT_MAPPER.readTree(json);
-                segmentRecord.putValue(STUDENT_ID, jsonNode.get(STUDENT_ID).asText());
-                segmentRecord.putValue(FIRST_NAME, jsonNode.get(FIRST_NAME).asText());
-                segmentRecord.putValue(LAST_NAME, jsonNode.get(LAST_NAME).asText());
-                segmentRecord.putValue(GENDER, jsonNode.get(GENDER).asText());
-                segmentRecord.putValue(SUBJECT, jsonNode.get(SUBJECT).asText());
-                segmentRecord.putValue(SCORE, jsonNode.get(SCORE).asText());
+                Iterator<Map.Entry<String, JsonNode>> fields = jsonNode.fields();
+                while (fields.hasNext()) {
+                    Map.Entry<String, JsonNode> field = fields.next();
+                    segmentRecord.putValue(field.getKey(), field.getValue().textValue());
+                }
                 segmentRecords.add(segmentRecord);
             }
         }
 
-
         // Build the segment
         SegmentIndexCreationDriverImpl driver = new SegmentIndexCreationDriverImpl();
-        driver.init(config, new GenericRowRecordReader(segmentRecords));
+        driver.init(segmentGeneratorConfig, new GenericRowRecordReader(segmentRecords));
         driver.build();
 
-        // Tar the segment
-//        createTarGzFile(driver);
-        TarGzCompressionUtils.createTarGzOfDirectory(INDEX_DIR.getAbsolutePath(), SEGMENT_FILES_PATH);
+        // Tar the segment -> 0.4.0 API
+        TarGzCompressionUtils.createTarGzOfDirectory(INDEX_DIR.getAbsolutePath(), SEGMENT_FILES_PATH + SEGMENT_NAME);
+        // Tar the segment -> 0.5.0 API
+        LOGGER.info("Created the segment her : {} ", SEGMENT_FILES_PATH + SEGMENT_NAME);
     }
 
+    /*
     private static void createTarGzFile(SegmentIndexCreationDriverImpl driver) {
         String segmentName = driver.getSegmentName();
         File indexDir = new File(INDEX_DIR.getAbsolutePath(), segmentName);
         File segmentTarFile = new File(SEGMENT_FILES_PATH, segmentName + TarGzCompressionUtils.TAR_GZ_FILE_EXTENSION);
-//        TarGzCompressionUtils.createTarGzFile(indexDir, segmentTarFile);
+
     }
+    */
 
 
-    private static Schema buildSchema() {
+    private Schema buildSchemaFromFile() {
         Schema schema = new Schema();
-
-        schema.addField(new DimensionFieldSpec(STUDENT_ID, FieldSpec.DataType.INT, true));
-        schema.addField(new DimensionFieldSpec(FIRST_NAME, FieldSpec.DataType.STRING, true));
-        schema.addField(new DimensionFieldSpec(LAST_NAME, FieldSpec.DataType.STRING, true));
-        schema.addField(new DimensionFieldSpec(GENDER, FieldSpec.DataType.STRING, true));
-        schema.addField(new DimensionFieldSpec(SUBJECT, FieldSpec.DataType.STRING, true));
-        schema.addField(new MetricFieldSpec(SCORE, FieldSpec.DataType.FLOAT));
+        String schemaPath = _config.getString(PinotSinkConnectorConfig.PINOT_SCHEMA_PATH_CONFIG);
+        String schemaName = _config.getString(PinotSinkConnectorConfig.PINOT_SCHEMA_NAME_CONFIG);
+        LOGGER.info("buildSchemaFromFile {} ", schemaPath);
+        if (schemaPath == null) {
+            LOGGER.error("No schema is needs to be there ");
+        }
+        try {
+            return Schema.fromFile(new File(schemaPath));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return schema;
     }
-
 }

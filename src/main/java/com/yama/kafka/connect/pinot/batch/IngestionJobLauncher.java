@@ -26,7 +26,6 @@ public class IngestionJobLauncher {
 
     public static SegmentGenerationJobSpec getSegmentGenerationJobSpec(String jobSpecFilePath, String propertyFilePath,
                                                                        Map<String, Object> context) {
-        LOGGER.info("HELLO");
         Properties properties = new Properties();
         if (propertyFilePath != null) {
             try {

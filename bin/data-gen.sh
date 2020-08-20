@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-ksql-datagen format=json schema=../data/data-gen.avro topic=transcript key=studentID iterations=10
+ksql-datagen format=json schema=../data/data-gen.avro topic=transcript key=studentID iterations=200

@@ -23,38 +23,49 @@ public class PinotRecordsWriter {
     private static final Logger LOGGER = LoggerFactory.getLogger(PinotRecordsWriter.class);
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     public static final String FILE_NAME_PATTERN = "yyyyMMddHHmmss";
+    public static final String JSON = ".json";
     int batchSize = 100;
     int recordsSize = 0;
     private static final long flushTimeoutMs = 1000;
 
     private PrintStream _outputStream;
+    private final PinotConnectorSegmentCreator _pinotSegmentCreator;
+    private PinotSinkConnectorConfig _config;
 
-    public PinotRecordsWriter(PrintStream outputStream) {
+    public PinotRecordsWriter(PrintStream outputStream, PinotConnectorSegmentCreator pinotSegmentCreator) {
         _outputStream = outputStream;
+        _pinotSegmentCreator = pinotSegmentCreator;
     }
 
     public void initWriter(PinotSinkConnectorConfig config) {
-        String topic = "transcript";
-//        Path segmentsPath = Paths.get(config.getString(PinotSinkConnectorConfig.PINOT_INPUT_DIR_URI_CONFIG) + "/" + topic);
-        String segmentsPath = config.getString(PinotSinkConnectorConfig.PINOT_INPUT_DIR_URI_CONFIG) + "_" + topic;
+        _config = config;
+        batchSize = Integer.parseInt(config.getString(PinotSinkConnectorConfig.BATCH_SIZE_CONFIG));
+        String rawDataPath = config.getString(PinotSinkConnectorConfig.PINOT_INPUT_DIR_URI_CONFIG);
+        String file = config.getString(PinotSinkConnectorConfig.PINOT_TABLE_NAME_CONFIG) + JSON;
         String time = new SimpleDateFormat(FILE_NAME_PATTERN).format(new Date());
-        String filename = ".json";
+        createDir(rawDataPath);
+        createRawRecordsFile(rawDataPath, file);
+
+    }
+
+    private void createRawRecordsFile(String rawDataPath, String file) {
         try {
             _outputStream = new PrintStream(
-                    Files.newOutputStream(Paths.get(segmentsPath + "_" + filename), StandardOpenOption.CREATE, StandardOpenOption.APPEND),
+                    Files.newOutputStream(Paths.get(rawDataPath + file), StandardOpenOption.CREATE, StandardOpenOption.APPEND),
                     false,
                     StandardCharsets.UTF_8.name());
         } catch (IOException e) {
-            throw new ConnectException("Couldn't find or create file '" + filename + "' for PinotSinkSinkTask", e);
+            throw new ConnectException("Couldn't find or create file '" + file + "' for PinotSinkSinkTask", e);
         }
     }
 
-    private void createRecordsDir(Path segmentsPath) {
-        if (!Files.exists(segmentsPath)) {
+    private void createDir(String path) {
+        Path _path = Paths.get(path);
+        if (!Files.exists(_path)) {
             try {
-                Files.createDirectory(segmentsPath);
+                Files.createDirectory(_path);
             } catch (IOException e) {
-                LOGGER.info("Couldn't find or create Director in {} ", segmentsPath);
+                LOGGER.info("Couldn't find or create Director in {} ", _path);
             }
         }
     }
@@ -79,20 +90,9 @@ public class PinotRecordsWriter {
             tryWriteRecord(sinkRecord);
         }
     }
+
     private void tryWriteRecord(SinkRecord sinkRecord) {
-        String record = null;
-        try {
-
-            record = convertRecordToJson(sinkRecord);
-            _outputStream.println(record);
-            if (recordsSize > batchSize) {
-                recordsSize = 0;
-            }
-            ++recordsSize;
-            LOGGER.info("recordsSize {} ", recordsSize);
-        } catch (Exception e) {
-
-        }
+        String record = convertRecordToJson(sinkRecord);
         if (record != null) {
             LOGGER.trace(
                     "Adding record from topic/partition/offset {}/{}/{} to bulk processor",
@@ -100,7 +100,20 @@ public class PinotRecordsWriter {
                     sinkRecord.kafkaPartition(),
                     sinkRecord.kafkaOffset()
             );
+            _outputStream.println(record);
 //            bulkProcessor.add(record, sinkRecord, flushTimeoutMs);
+            if (recordsSize > batchSize) {
+                try {
+                    _pinotSegmentCreator.generateSegment(_config);
+                    LOGGER.info("_pinotSegmentCreator {} ", batchSize);
+                    flush();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                recordsSize = 0;
+
+            }
+            ++recordsSize;
         }
     }
 
@@ -117,9 +130,10 @@ public class PinotRecordsWriter {
     private boolean ignoreRecord(SinkRecord record) {
         return record.value() == null;
     }
+
     public void flush() {
 //        bulkProcessor.flush(flushTimeoutMs);
-//        _outputStream.flush();
+        _outputStream.flush();
     }
 
     public void start() {

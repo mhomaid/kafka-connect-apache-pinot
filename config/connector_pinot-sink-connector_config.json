@@ -6,16 +6,20 @@
     "value.converter": "org.apache.kafka.connect.json.JsonConverter",
     "errors.log.enable": "true",
     "errors.log.include.messages": "true",
-    "topics": "transcript",
+    "topics": "Risk_Scores",
     "pinot.zookeeper.nodes": "localhost:2191",
     "pinot.cluster.name": "mycluster",
     "pinot.brokers.nodes": "localhost:2191",
-    "pinot.schema.path": "/Users/mohamed.homaid/Apache/Pinot/schemas",
-    "pinot.table.name": "myTable",
+    "pinot.schema.path": "/Users/mohamed.homaid/Apache/Pinot/demo-pinot/schemas/risk-scores-schema.json",
+    "pinot.schema.name": "Risk_Scores",
+    "pinot.table.name": "Risk_Scores",
     "batch.size": "1000",
+    "input.dir.uri": "/Users/mohamed.homaid/Apache/Pinot/demo-pinot/rawData/",
+    "output.dir.uri": "/Users/mohamed.homaid/Apache/Pinot/demo-pinot/segments/",
+    "overwrite.output": "true",
     "tableSpec.tableName": "table",
     "pinotClusterSpecs.controllerURI": "localhost:9000",
-    "value.converter.schemas.enable": "false",
-    "key.converter.schemas.enable": "false"
+    "key.converter.schemas.enable": "false",
+    "value.converter.schemas.enable": "false"
   }
 }
