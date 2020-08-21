@@ -31,6 +31,7 @@ public class PinotSinkTask extends SinkTask {
     }
 
     public void initWriter(PinotSinkConnectorConfig config) {
+        segmentCreator = new PinotConnectorSegmentCreator(config);
         writer = new PinotRecordsWriter(outputStream, segmentCreator);
         writer.initWriter(config);
     }

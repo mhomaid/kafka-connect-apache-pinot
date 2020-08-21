@@ -14,7 +14,14 @@ public class BulkProcessor {
     private final int maxRetries;
     private final long retryBackoffMs;
 
-    public BulkProcessor(Time time, int maxBufferedRecords, int batchSize, long lingerMs, int maxRetries, long retryBackoffMs) {
+    public BulkProcessor(
+            Time time,
+            int maxBufferedRecords,
+            int batchSize,
+            long lingerMs,
+            int maxRetries,
+            long retryBackoffMs
+    ) {
         this.time = time;
         this.maxBufferedRecords = maxBufferedRecords;
         this.batchSize = batchSize;

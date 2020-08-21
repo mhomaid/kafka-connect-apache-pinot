@@ -27,6 +27,7 @@ public class PinotConnectorSegmentCreator {
     private static Logger LOGGER = LoggerFactory.getLogger(PinotConnectorSegmentCreator.class);
 
     public static final String JSON = ".json";
+    public static final String TAR_GZ = ".tar.gz";
     private static final double MAX_VALUE = Integer.MAX_VALUE;
     private static final int NUM_ROWS = 1000;
     public static IndexSegment _indexSegment;
@@ -34,36 +35,41 @@ public class PinotConnectorSegmentCreator {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     PinotSinkConnectorConfig _config;
 
+    public PinotConnectorSegmentCreator(PinotSinkConnectorConfig config) {
+        this._config = config;
+    }
 
-    public void generateSegment(PinotSinkConnectorConfig config)
-            throws Exception {
-        LOGGER.info("generateSegment ");
+    public void generateSegment(PinotSinkConnectorConfig config) throws Exception {
         String TABLE_NAME = config.getString(PinotSinkConnectorConfig.PINOT_TABLE_NAME_CONFIG);
         String SEGMENT_NAME = config.getString(PinotSinkConnectorConfig.PINOT_TABLE_NAME_CONFIG);
         String RECORDS_FILES_PATH = config.getString(PinotSinkConnectorConfig.PINOT_INPUT_DIR_URI_CONFIG);
         String SEGMENT_FILES_PATH = config.getString(PinotSinkConnectorConfig.OUTPUT_DIR_URI_CONFIG);
         File INDEX_DIR = new File(SEGMENT_FILES_PATH);
-
+        LOGGER.info("Generating Segment : {} @ {} ",
+                SEGMENT_NAME + TAR_GZ,
+                SEGMENT_FILES_PATH
+        );
+        Schema schema = buildSchema();
+        if (schema == null) throw new Exception();
         SegmentGeneratorConfig segmentGeneratorConfig = new SegmentGeneratorConfig(
                 new TableConfigBuilder(TableType.OFFLINE).setTableName(TABLE_NAME).build(),
-                buildSchemaFromFile());
+                schema);
 
         segmentGeneratorConfig.setSegmentName(SEGMENT_NAME);
         segmentGeneratorConfig.setOutDir(INDEX_DIR.getAbsolutePath());
         segmentGeneratorConfig.setTableName(TABLE_NAME);
-        String file = RECORDS_FILES_PATH + TABLE_NAME + JSON;
 
         List<GenericRow> segmentRecords = new ArrayList<>();
         GenericRow segmentRecord = new GenericRow();
-        JsonNode jsonNode;
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8))) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(RECORDS_FILES_PATH + TABLE_NAME + JSON), StandardCharsets.UTF_8))) {
             String json;
             while ((json = br.readLine()) != null) {
-                jsonNode = OBJECT_MAPPER.readTree(json);
-                Iterator<Map.Entry<String, JsonNode>> fields = jsonNode.fields();
+                Iterator<Map.Entry<String, JsonNode>> fields = OBJECT_MAPPER.readTree(json).fields();
                 while (fields.hasNext()) {
                     Map.Entry<String, JsonNode> field = fields.next();
-                    segmentRecord.putValue(field.getKey(), field.getValue().textValue());
+                    if (!field.getKey().equals("timestamp")) {
+                        segmentRecord.putValue(field.getKey(), field.getValue().textValue());
+                    }
                 }
                 segmentRecords.add(segmentRecord);
             }
@@ -77,7 +83,6 @@ public class PinotConnectorSegmentCreator {
         // Tar the segment -> 0.4.0 API
         TarGzCompressionUtils.createTarGzOfDirectory(INDEX_DIR.getAbsolutePath(), SEGMENT_FILES_PATH + SEGMENT_NAME);
         // Tar the segment -> 0.5.0 API
-        LOGGER.info("Created the segment her : {} ", SEGMENT_FILES_PATH + SEGMENT_NAME);
     }
 
     /*
@@ -89,20 +94,17 @@ public class PinotConnectorSegmentCreator {
     }
     */
 
-
-    private Schema buildSchemaFromFile() {
-        Schema schema = new Schema();
-        String schemaPath = _config.getString(PinotSinkConnectorConfig.PINOT_SCHEMA_PATH_CONFIG);
-        String schemaName = _config.getString(PinotSinkConnectorConfig.PINOT_SCHEMA_NAME_CONFIG);
-        LOGGER.info("buildSchemaFromFile {} ", schemaPath);
-        if (schemaPath == null) {
-            LOGGER.error("No schema is needs to be there ");
-        }
+    /**
+     * BuildSchema
+     *
+     * @return Schema
+     */
+    private Schema buildSchema() {
         try {
-            return Schema.fromFile(new File(schemaPath));
+            return Schema.fromFile(new File(_config.getString(PinotSinkConnectorConfig.PINOT_SCHEMA_PATH_CONFIG)));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return schema;
+        return null;
     }
 }
